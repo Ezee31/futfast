@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutFast - Cálculo de Pagos y Cronómetro</title>
+
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+
+    <!-- Tu archivo CSS personalizado -->
+    <link rel="stylesheet" href="{% static 'jornadas/styles.css' %}">
+</head>
+<body class="grey darken-4">
+    <div class="container">
+        <!-- Título principal -->
+        <h1 class="center-align white-text my-4">FutFast</h1>
+
+        <!-- Sección Cálculo de Pagos -->
+        <div class="card grey darken-3 white-text mb-4 z-depth-2">
+            <div class="card-content">
+                <h2 class="h5">Cálculo de Pagos</h2>
+                <form method="POST" action="{% url 'calcular' %}">
+                    {% csrf_token %}
+                    <div class="input-field">
+                        <input type="number" id="costo" name="costo" class="white-text" required>
+                        <label for="costo">Costo por hora (C$)</label>
+                    </div>
+
+                    <div class="input-field">
+                        <input type="number" id="personas" name="personas" class="white-text" required>
+                        <label for="personas">Número de personas</label>
+                    </div>
+
+                    <div class="input-field">
+                        <input type="number" id="horas" name="horas" class="white-text" required>
+                        <label for="horas">Horas jugadas</label>
+                    </div>
+
+                    <button type="submit" class="btn grey lighten-1 waves-effect waves-light w-100">Calcular</button>
+                </form>
+
+                <!-- Mostrar el resultado solo si hay un total calculado -->
+                {% if total %}
+                <div class="card-panel grey darken-1 white-text mt-4 z-depth-2">
+                    <h4>Resultado:</h4>
+                    <p>Total a pagar por persona: <strong>C$ {{ total }}</strong></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sección del Cronómetro -->
+        <div class="card grey darken-3 white-text mb-4 z-depth-2">
+            <div class="card-content text-center">
+                <div id="timer" class="display-4 white-text mb-4">00:00:00</div>
+                <button id="startStopBtn" class="btn grey lighten-1 waves-effect waves-light me-2">Iniciar</button>
+                <button id="resetBtn" class="btn grey darken-1 waves-effect waves-light">Restablecer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Materialize JS y Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Tu archivo JavaScript personalizado -->
+    <script src="{% static 'jornadas/timer.js' %}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% if messages %}
+            {% for message in messages %}
+            M.toast({html: '{{ message }}', classes: 'rounded'});
+            {% endfor %}
+            {% endif %}
+        });
+    </script>
+    
+    
+</body>
+</html>
